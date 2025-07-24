@@ -1,0 +1,12 @@
+- name: Deploy password generator locally
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Copy script to deployment folder
+      copy:
+        src: ../password_gen.py
+        dest: /opt/password_gen.py
+        mode: '0755'
+
+    - name: Run the script
+      command: python3 /opt/password_gen.py

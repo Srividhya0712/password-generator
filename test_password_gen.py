@@ -1,24 +1,24 @@
 import unittest
-import password_gen
+from password_gen import generate_password, generate_passphrase
+import string
 
-class TestPasswordGenerator(unittest.TestCase):
+class TestPasswordGen(unittest.TestCase):
 
-    def test_password_is_string(self):
-        pwd = password_gen.generate_password()
-        self.assertIsInstance(pwd, str, "Password should be a string")
+    def test_password_length(self):
+        pwd, _ = generate_password(10)
+        self.assertEqual(len(pwd), 10)
 
-    def test_password_not_empty(self):
-        pwd = password_gen.generate_password()
-        self.assertTrue(len(pwd) > 0, "Password should not be empty")
+    def test_password_no_symbols(self):
+        pwd, _ = generate_password(12, False)
+        self.assertTrue(all(c not in string.punctuation for c in pwd))
 
-    def test_password_length_default(self):
-        pwd = password_gen.generate_password()
-        self.assertEqual(len(pwd), 10, "Password should be 10 characters by default")
+    def test_passphrase_format(self):
+        pwd, _ = generate_passphrase(4)
+        self.assertEqual(len(pwd.split('-')), 4)
 
-    def test_password_is_random(self):
-        pwd1 = password_gen.generate_password()
-        pwd2 = password_gen.generate_password()
-        self.assertNotEqual(pwd1, pwd2, "Passwords should be random")
+    def test_entropy(self):
+        pwd, entropy = generate_password(10)
+        self.assertIsInstance(entropy, float)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
